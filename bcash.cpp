@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <chrono>
 #include <unordered_set>
-#include "TurboRLE/trle.h"
 #include "zstr.hpp"
 
 
@@ -25,7 +24,7 @@ uint64_t xs(uint64_t y){
 
 void print_bin(uint64_t hash){
     string binrep;
-    cout<<"print_bin    "<<hash<<"  ";
+    // cout<<"print_bin    "<<hash<<"  ";
     for(uint64_t i(0);i<number_bit;++i){
         if(hash%2==0){
             binrep+="0";
@@ -41,7 +40,6 @@ void print_bin(uint64_t hash){
 
 
 uint64_t number_flip(uint32_t hash){
-    // cout<<"numberfliphash:  "<<hash<<endl;
     uint64_t res(0);
     uint64_t old_bit(hash%2);
     for(uint64_t i(1);i<number_bit;++i){
@@ -52,7 +50,19 @@ uint64_t number_flip(uint32_t hash){
             old_bit=new_bit;
         }
     }
-    // cout<<res<<endl;
+    return res;
+}
+
+
+
+uint64_t number_1(uint32_t hash){
+    uint64_t res(0);
+    for(uint64_t i(0);i<number_bit;++i){
+        hash>>=1;
+        if(hash%2==1){
+            res++;
+        }
+    }
     return res;
 }
 
@@ -62,12 +72,12 @@ uint32_t keep_best_hash(uint32_t seed, uint64_t steps){
     // cout<<"keepbesthash:    "<<seed<<" "<<steps<<endl;
     uint64_t best_score(number_flip(seed));
     uint32_t best_hash(seed);
-    // cout<<"best score:  "<<best_score<<endl;
+    // cout<<"init score:  "<<best_score<<endl;
     // print_bin(best_hash);
     uint64_t hash(seed);
     for(uint64_t i(0);i<steps;++i){
         hash=(xs(hash));
-        uint64_t score(number_flip(hash));
+        uint64_t score(number_1(hash));
         if(score<best_score){
             best_score=score;
             best_hash=hash;
@@ -112,5 +122,6 @@ int main(int argc, char ** argv){
     // unsigned char compressed[4*iteration+1024];
     // compressed_size=trlec(  (unsigned char*)(&sketch[0]) ,size, compressed);
     // cout<<compressed_size<<endl;
+    cout<<"Ended, take a look at sketch.txt and sketch.gz"<<endl;
 
 }
