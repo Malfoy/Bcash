@@ -1,0 +1,2 @@
+# Bcash
+Best compressible hash
